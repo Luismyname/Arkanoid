@@ -1,4 +1,22 @@
-const canvas = document.querySelector("canvas");
+let juego = document.getElementsByTagName('body')[0]
+
+
+
+
+
+/*este apartado manejara el menu principal del juego*/
+
+let jugar = document.getElementById('jugar')
+let instrucciones = document.getElementById('instrucciones')
+let ajustes = document.getElementById('ajustes')
+
+jugar.addEventListener('click', () => {
+    alert('has pulsado jugar')
+    juego.innerHTML = `<canvas></canvas>
+    <img hidden id="sprite" src="./imagenes/sprite.png" alt="Sprite Arkanoid">
+    <img hidden id="bricks" src="./imagenes/bricks.png" alt="Sprite Bricks Arkanoid">
+    <script src="function.js"></script>`
+    const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
 const $sprite = document.querySelector('#sprite')
@@ -49,6 +67,7 @@ for (let c = 0; c < brickColumnCount; c++) {
         const brickY = r * (brickHeight + brickPadding) + brickOffsetTop
         //asignar un color aleatorio a cada ladrillo
         const random = Math.floor(Math.random() * 8) //numero aleatorio entre 0 y 7
+        
         //guardamos la informacion del ladrillo en el array
         bricks[c][r] = {
             x: brickX, y: brickY,
@@ -85,29 +104,42 @@ function drawPaddle() {
 }
 
 function drawBricks() {
+    // Recorre todas las columnas de ladrillos
     for (let c = 0; c < brickColumnCount; c++) {
+        // Recorre todas las filas de ladrillos
         for (let r = 0; r < brickRowCount; r++) {
-            const currentBrick = bricks[c][r]
+            const currentBrick = bricks[c][r] // Obtiene el ladrillo actual
+
+            // Si el ladrillo está destruido, pasa al siguiente
             if (currentBrick.status === BRICK_STATUS.DESTROYED) {
                 continue
             }
+
+            // Dibuja el rectángulo amarillo del ladrillo
             ctx.fillStyle = 'yellow'
             ctx.fillRect(currentBrick.x, currentBrick.y, brickWidth, brickHeight)
+
+            // Dibuja el borde negro del ladrillo
             ctx.strokeStyle = 'black'
             ctx.stroke()
+
+            // Rellena el ladrillo (aunque ya se ha hecho con fillRect)
             ctx.fill()
 
+            // Calcula la posición X del recorte en el sprite de ladrillos según el color
             const clipX = currentBrick.color * 32
+
+            // Dibuja el sprite del ladrillo encima del rectángulo
             ctx.drawImage(
-                $bricks,
-                clipX,
-                0,
-                brickWidth,
-                brickHeight,
-                currentBrick.x,
-                currentBrick.y,
-                brickWidth,
-                brickHeight
+                $bricks,              // Imagen de los ladrillos
+                clipX,                // Posición X del recorte en el sprite
+                0,                    // Posición Y del recorte en el sprite
+                brickWidth,           // Ancho del recorte
+                brickHeight,          // Alto del recorte
+                currentBrick.x,       // Posición X en el canvas
+                currentBrick.y,       // Posición Y en el canvas
+                brickWidth,           // Ancho en el canvas
+                brickHeight           // Alto en el canvas
             )
         }
     }
@@ -206,3 +238,4 @@ function draw() {
 
 draw()
 initEvents()
+})
